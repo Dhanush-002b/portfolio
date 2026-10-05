@@ -67,9 +67,9 @@ Update the profile information in `src/App.jsx` for:
 
 ## Contact
 
-- Email: your.email@example.com
-- GitHub: https://github.com/your-username
-- LinkedIn: https://www.linkedin.com/in/your-profile
+- Email: dhanushdhornagambala24@gmail.com
+- GitHub: https://github.com/Dhanush-002b
+- LinkedIn: https://www.linkedin.com/in/dhanush-d-5426932b7
 
 ## License
 

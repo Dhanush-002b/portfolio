@@ -27,9 +27,9 @@ import {
 
 const PROFILE = {
   name: 'Dhornagambala Dhanush',
-  email: 'your.email@example.com',
-  github: 'https://github.com/your-username',
-  linkedin: 'https://www.linkedin.com/in/your-profile',
+  email: 'dhanushdhornagambala24@gmail.com',
+  github: 'https://github.com/Dhanush-002b',
+  linkedin: 'https://www.linkedin.com/in/dhanush-d-5426932b7?utm_source=share_via&utm_content=profile&utm_medium=member_android',
 };
 
 const skills = [
@@ -593,8 +593,8 @@ function Contact() {
             <p>I&apos;m open to internship opportunities, collaborations, and conversations about technology. Drop me a message.</p>
             <div className="contact-details">
               <a href={`mailto:${PROFILE.email}`}><span><Mail size={17} /></span><div><small>EMAIL</small><b>{PROFILE.email}</b></div><ArrowUpRight size={14} /></a>
-              <a href={PROFILE.linkedin} target="_blank" rel="noreferrer"><span><Linkedin size={17} /></span><div><small>LINKEDIN</small><b>linkedin.com/in/your-profile</b></div><ArrowUpRight size={14} /></a>
-              <a href={PROFILE.github} target="_blank" rel="noreferrer"><span><Github size={17} /></span><div><small>GITHUB</small><b>github.com/your-username</b></div><ArrowUpRight size={14} /></a>
+              <a href={PROFILE.linkedin} target="_blank" rel="noreferrer"><span><Linkedin size={17} /></span><div><small>LINKEDIN</small><b>linkedin.com/in/dhanush-d-5426932b7</b></div><ArrowUpRight size={14} /></a>
+              <a href={PROFILE.github} target="_blank" rel="noreferrer"><span><Github size={17} /></span><div><small>GITHUB</small><b>github.com/Dhanush-002b</b></div><ArrowUpRight size={14} /></a>
               <div className="contact-location"><span><MapPin size={17} /></span><div><small>LOCATION</small><b>Nellore, Andhra Pradesh, India</b></div></div>
             </div>
           </Reveal>
