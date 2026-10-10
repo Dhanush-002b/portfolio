@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hotel Billing System</title>
+    <style>
+      :root {
+        --bg: #0f172a;
+        --panel: rgba(15, 23, 42, 0.8);
+        --panel-soft: rgba(30, 41, 59, 0.72);
+        --card: #f8fafc;
+        --text: #e2e8f0;
+        --muted: #94a3b8;
+        --primary: #38bdf8;
+        --primary-strong: #0284c7;
+        --accent: #fbbf24;
+        --success: #34d399;
+        --danger: #f87171;
+        --border: rgba(148, 163, 184, 0.22);
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--text);
+        background: radial-gradient(circle at top, rgba(56, 189, 248, 0.2), transparent 35%),
+          linear-gradient(135deg, #020817 0%, #0f172a 36%, #111827 100%);
+      }
+
+      .container {
+        width: min(1100px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 42px 0;
+      }
+
+      .app-shell {
+        width: min(960px, 100%);
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 35px 80px rgba(15, 23, 42, 0.55);
+        overflow: hidden;
+      }
+
+      .header {
+        padding: 28px 28px 18px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: clamp(1.9rem, 3vw, 2.7rem);
+        font-weight: 800;
+        letter-spacing: -0.05em;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(52, 211, 153, 0.15);
+        color: var(--success);
+        border: 1px solid rgba(52, 211, 153, 0.4);
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 0;
+      }
+
+      .panel {
+        padding: 28px;
+      }
+
+      .left {
+        border-right: 1px solid var(--border);
+      }
+
+      .field-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px 18px;
+      }
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .field.full {
+        grid-column: 1 / -1;
+      }
+
+      label {
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      input {
+        width: 100%;
+        border: 1px solid rgba(148, 163, 184, 0.28);
+        background: rgba(15, 23, 42, 0.7);
+        color: var(--text);
+        border-radius: 12px;
+        padding: 14px 14px;
+        font-size: 1rem;
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      input:focus {
+        border-color: rgba(56, 189, 248, 0.85);
+        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      button {
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+      }
+
+      button:hover { transform: translateY(-1px); }
+
+      .primary-btn {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-strong) 100%);
+        color: white;
+        padding: 13px 18px;
+      }
+
+      .secondary-btn {
+        background: rgba(148, 163, 184, 0.12);
+        color: var(--text);
+        border: 1px solid var(--border);
+        padding: 12px 18px;
+      }
+
+      .summary-card {
+        background: linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(226, 232, 240, 0.96));
+        color: #0f172a;
+        border-radius: 18px;
+        padding: 22px 18px;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+      }
+
+      .summary-card h2 {
+        margin: 0 0 18px;
+        font-size: 1.25rem;
+        letter-spacing: -0.04em;
+      }
+
+      .summary-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 12px;
+      }
+
+      .summary-list li {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        font-size: 0.96rem;
+        border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+        padding-bottom: 8px;
+      }
+
+      .summary-list li:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .summary-list .label {
+        color: #334155;
+      }
+
+      .summary-list .value {
+        font-weight: 700;
+      }
+
+      .summary-list li.total {
+        margin-top: 12px;
+        padding-top: 14px;
+        border-top: 1px solid rgba(15, 23, 42, 0.12);
+        border-bottom: 0;
+        font-size: 1.06rem;
+      }
+
+      .summary-list li.total .value {
+        color: #0f766e;
+      }
+
+      .status {
+        margin-top: 16px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        background: rgba(56, 189, 248, 0.12);
+        color: #075985;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--primary-strong);
+      }
+
+      @media (max-width: 760px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .left {
+          border-right: 0;
+          border-bottom: 1px solid var(--border);
+        }
+
+        .field-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="app-shell">
+        <header class="header">
+          <div class="header-top">
+            <h1>Hotel Billing System</h1>
+            <span class="badge">Live Calculation</span>
+          </div>
+        </header>
+        <div class="layout">
+          <section class="panel left">
+            <div class="field-grid">
+              <div class="field full">
+                <label for="roomName">Room Name</label>
+                <input id="roomName" type="text" value="Deluxe Room" placeholder="Room Name" />
+              </div>
+
+              <div class="field">
+                <label for="ratePerNight">Rate per Night</label>
+                <input id="ratePerNight" type="number" min="1" step="0.01" value="2500" />
+              </div>
+
+              <div class="field">
+                <label for="nightsStayed">Nights Stayed</label>
+                <input id="nightsStayed" type="number" min="1" step="1" value="4" />
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="primary-btn" id="calculateBtn" type="button">Calculate Bill</button>
+              <button class="secondary-btn" id="clearBtn" type="button">Clear</button>
+            </div>
+          </section>
+
+          <aside class="panel right">
+            <div class="summary-card">
+              <h2>Bill Summary</h2>
+              <ul class="summary-list">
+                <li><span class="label">Room</span><span class="value" id="roomValue">Deluxe Room</span></li>
+                <li><span class="label">Room Total</span><span class="value" id="roomTotal">₹0.00</span></li>
+                <li><span class="label">Discount</span><span class="value" id="discountValue">₹0.00</span></li>
+                <li><span class="label">After Discount</span><span class="value" id="afterDiscount">₹0.00</span></li>
+                <li><span class="label">GST (12%)</span><span class="value" id="gstValue">₹0.00</span></li>
+                <li class="total"><span class="label">Grand Total</span><span class="value" id="grandTotal">₹0.00</span></li>
+              </ul>
+              <div class="status"><span class="status-dot"></span><span id="discountStatus">No discount</span></div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function calculateBill(roomName, ratePerNight, nightsStayed) {
+        const roomTotal = ratePerNight * nightsStayed;
+        const discountThreshold = 3;
+        const discountRate = 0.10;
+        const gstRate = 0.12;
+        const isEligible = nightsStayed > discountThreshold;
+        const discountAmount = isEligible ? roomTotal * discountRate : 0;
+        const afterDiscount = roomTotal - discountAmount;
+        const gstAmount = afterDiscount * gstRate;
+        const grandTotal = afterDiscount + gstAmount;
+
+        return {
+          roomName,
+          ratePerNight,
+          nightsStayed,
+          roomTotal,
+          discountRate,
+          discountAmount,
+          afterDiscount,
+          gstRate,
+          gstAmount,
+          grandTotal,
+          eligibleForDiscount: isEligible,
+        };
+      }
+
+      function formatCurrency(value) {
+        return new Intl.NumberFormat('en-IN', {
+          style: 'currency',
+          currency: 'INR',
+          minimumFractionDigits: 2,
+        }).format(value);
+      }
+
+      function updateBill() {
+        const roomName = document.getElementById('roomName').value.trim() || 'Deluxe Room';
+        const ratePerNight = Number(document.getElementById('ratePerNight').value);
+        const nightsStayed = Number(document.getElementById('nightsStayed').value);
+
+        if (!Number.isFinite(ratePerNight) || ratePerNight <= 0) {
+          alert('Rate per night must be greater than zero.');
+          return;
+        }
+
+        if (!Number.isFinite(nightsStayed) || nightsStayed <= 0) {
+          alert('Nights stayed must be greater than zero.');
+          return;
+        }
+
+        const bill = calculateBill(roomName, ratePerNight, nightsStayed);
+
+        document.getElementById('roomValue').textContent = bill.roomName;
+        document.getElementById('roomTotal').textContent = formatCurrency(bill.roomTotal);
+        document.getElementById('discountValue').textContent = formatCurrency(bill.discountAmount);
+        document.getElementById('afterDiscount').textContent = formatCurrency(bill.afterDiscount);
+        document.getElementById('gstValue').textContent = formatCurrency(bill.gstAmount);
+        document.getElementById('grandTotal').textContent = formatCurrency(bill.grandTotal);
+        document.getElementById('discountStatus').textContent = bill.eligibleForDiscount ? 'Discount applied' : 'No discount';
+      }
+
+      document.getElementById('calculateBtn').addEventListener('click', updateBill);
+      document.getElementById('clearBtn').addEventListener('click', () => {
+        document.getElementById('roomName').value = 'Deluxe Room';
+        document.getElementById('ratePerNight').value = '2500';
+        document.getElementById('nightsStayed').value = '4';
+        updateBill();
+      });
+
+      updateBill();
+    </script>
+  </body>
+</html>

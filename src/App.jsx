@@ -61,11 +61,12 @@ const projects = [
     number: '02',
     title: 'Hotel Billing System',
     description:
-      'A billing-focused application concept for keeping hotel orders and their totals organized.',
-    technologies: ['Java', 'Programming'],
+      'A practical hotel billing calculator that computes room charges, discounts for extended stays, GST, and the final payable total in a clean billing dashboard.',
+    technologies: ['Python', 'Tkinter', 'GUI', 'Billing'],
     icon: Terminal,
-    demo: false,
-    repoUrl: 'https://github.com/your-username/hotel-billing-system',
+    demo: true,
+    repoUrl: 'https://github.com/Dhanush-002b',
+    demoUrl: '/hotel-billing/index.html',
   },
   {
     number: '03',
