@@ -50,11 +50,12 @@ const projects = [
     number: '01',
     title: 'Hospital Waiting Queue System',
     description:
-      'A project concept for organizing patient queues and making the waiting process easier to manage.',
-    technologies: ['Python', 'Problem Solving'],
+      'A full-stack application for managing patient queues in hospitals. Features include patient registration, queue management, priority-based ordering, and real-time queue status tracking with an Express.js backend and interactive web frontend.',
+    technologies: ['Node.js', 'Express.js', 'JavaScript', 'HTML', 'CSS'],
     icon: Layers3,
-    demo: false,
-    repoUrl: 'https://github.com/your-username/hospital-waiting-queue-system',
+    demo: true,
+    repoUrl: 'https://github.com/Dhanush-002b/hospital-queue',
+    demoUrl: '/hospital-queue/frontend/index.html',
   },
   {
     number: '02',

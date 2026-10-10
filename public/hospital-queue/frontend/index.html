@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hospital Waiting Queue</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 24px 16px;
+        background: #f5f5f5;
+        color: #111827;
+      }
+
+      .container {
+        width: min(100%, 620px);
+        background: #ffffff;
+        border-radius: 10px;
+        border: 1px solid #dfe3e8;
+        padding: 24px 20px 18px;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 28px;
+      }
+
+      .header-badge {
+        display: inline-flex;
+        width: 42px;
+        height: 42px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background: #eef2f7;
+        border: 1px solid #dfe3e8;
+        font-size: 22px;
+        margin-bottom: 14px;
+      }
+
+      h1 {
+        font-size: clamp(1.8rem, 3vw, 2.4rem);
+        font-weight: 700;
+        letter-spacing: -0.04em;
+        color: #111827;
+      }
+
+      .subtitle {
+        margin-top: 8px;
+        color: #6b7280;
+        font-size: 0.95rem;
+      }
+
+      .input-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 24px;
+      }
+
+      .input-row {
+        display: flex;
+        gap: 10px;
+      }
+
+      input {
+        flex: 1;
+        padding: 11px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 0.98rem;
+        background: #f9fafb;
+        color: #111827;
+        outline: none;
+      }
+
+      input::placeholder {
+        color: #94a3b8;
+      }
+
+      input:focus {
+        border-color: #3b82f6;
+        background: white;
+      }
+
+      button {
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        padding: 11px 14px;
+        font-size: 0.92rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.15s ease;
+      }
+
+      button:hover {
+        opacity: 0.96;
+      }
+
+      .add-btn {
+        min-width: 140px;
+        background: #111827;
+        color: white;
+        border-color: #111827;
+      }
+
+      .priority-btn {
+        width: 100%;
+        background: #f3f4f6;
+        color: #111827;
+        border-color: #d1d5db;
+      }
+
+      .queue-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+      }
+
+      .queue-header h2 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #1f2937;
+      }
+
+      .queue-actions {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .action-btn {
+        flex: 1;
+        padding: 10px 12px;
+        font-size: 0.84rem;
+        border-radius: 8px;
+        font-weight: 700;
+      }
+
+      .next-btn {
+        background: #f3f4f6;
+        color: #111827;
+        border-color: #d1d5db;
+      }
+
+      .clear-btn {
+        background: #fef2f2;
+        color: #991b1b;
+        border-color: #fecaca;
+      }
+
+      .count {
+        background: #f3f4f6;
+        color: #374151;
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        border: 1px solid #d1d5db;
+      }
+
+      .queue {
+        list-style: none;
+        max-height: 320px;
+        overflow-y: auto;
+      }
+
+      .queue::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .queue::-webkit-scrollbar-thumb {
+        background: #d1d5db;
+        border-radius: 999px;
+      }
+
+      .patient {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        background: #f9fafb;
+        border-left: 3px solid #111827;
+        border-radius: 8px;
+        padding: 12px 12px;
+        margin-bottom: 8px;
+        border: 1px solid #e5e7eb;
+      }
+
+      .patient.priority {
+        background: #fff7ed;
+        border-left-color: #d97706;
+      }
+
+      .patient-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+      }
+
+      .token {
+        display: inline-flex;
+        width: 34px;
+        height: 34px;
+        border-radius: 6px;
+        align-items: center;
+        justify-content: center;
+        background: #e5e7eb;
+        color: #111827;
+        font-weight: 700;
+        font-size: 0.72rem;
+      }
+
+      .patient-name {
+        font-weight: 600;
+        color: #1f2937;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .patient-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .remove-btn {
+        width: 26px;
+        height: 26px;
+        border-radius: 6px;
+        background: #fef2f2;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .priority-label {
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: #fef3c7;
+        color: #92400e;
+        font-size: 0.68rem;
+        font-weight: 700;
+        border: 1px solid #f5d28b;
+      }
+
+      .empty {
+        text-align: center;
+        padding: 26px 16px;
+        border: 1px dashed #dbe3ee;
+        border-radius: 14px;
+        background: #f8fafc;
+        color: #94a3b8;
+        font-size: 1.02rem;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 20px;
+        color: #6b7280;
+        font-size: 0.72rem;
+        letter-spacing: 0.04em;
+      }
+
+      @media (max-width: 540px) {
+        .container {
+          padding: 24px 18px 18px;
+        }
+
+        .input-row {
+          flex-direction: column;
+        }
+
+        .add-btn {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="header-badge">🏥</div>
+        <h1>Hospital Waiting Queue</h1>
+        <p class="subtitle">Patient Queue Management</p>
+      </div>
+
+      <div class="input-panel">
+        <div class="input-row">
+          <input id="patientName" type="text" placeholder="Enter patient name" aria-label="Patient name" />
+          <button class="add-btn" id="addPatientBtn">Add Patient</button>
+        </div>
+
+        <button class="priority-btn" id="priorityPatientBtn">🚨 Add Priority Patient</button>
+      </div>
+
+      <div class="queue-header">
+        <h2>Waiting Patients</h2>
+        <span class="count" id="patientCount">0 Patients</span>
+      </div>
+
+      <div class="queue-actions">
+        <button class="action-btn next-btn" id="nextPatientBtn">✅ Next Patient</button>
+        <button class="action-btn clear-btn" id="clearQueueBtn">🗑 Clear Queue</button>
+      </div>
+
+      <ul class="queue" id="queueList"></ul>
+
+      <div class="footer">Hospital Queue Management System</div>
+    </div>
+
+    <script>
+      const queueList = document.getElementById('queueList');
+      const patientNameInput = document.getElementById('patientName');
+      const patientCount = document.getElementById('patientCount');
+      const storageKey = 'hospitalQueuePatients';
+
+      function getLocalQueue() {
+        try {
+          const saved = localStorage.getItem(storageKey);
+          return saved ? JSON.parse(saved) : [];
+        } catch (error) {
+          return [];
+        }
+      }
+
+      function saveLocalQueue(patients) {
+        localStorage.setItem(storageKey, JSON.stringify(patients));
+      }
+
+      function sanitiseName(name) {
+        return String(name || '').trim();
+      }
+
+      async function fetchPatients() {
+        try {
+          const response = await fetch('/api/patients');
+          if (!response.ok) {
+            throw new Error('Failed to fetch patients');
+          }
+
+          const data = await response.json();
+          const patients = data.patients || [];
+          saveLocalQueue(patients);
+          return patients;
+        } catch (error) {
+          return getLocalQueue();
+        }
+      }
+
+      function renderQueue(patients) {
+        queueList.innerHTML = '';
+
+        if (patients.length === 0) {
+          queueList.innerHTML = '<li class="empty">No patients waiting</li>';
+          patientCount.textContent = '0 Patients';
+          return;
+        }
+
+        patients.forEach((patient, index) => {
+          const li = document.createElement('li');
+          li.className = `patient${patient.priority ? ' priority' : ''}`;
+
+          const patientInfo = document.createElement('div');
+          patientInfo.className = 'patient-info';
+          patientInfo.innerHTML = `
+            <span class="token">#${index + 1}</span>
+            <span class="patient-name">${patient.name}</span>
+          `;
+
+          const rightSide = document.createElement('div');
+          rightSide.className = 'patient-controls';
+
+          if (patient.priority) {
+            const label = document.createElement('span');
+            label.className = 'priority-label';
+            label.textContent = 'PRIORITY';
+            rightSide.appendChild(label);
+          }
+
+          const removeBtn = document.createElement('button');
+          removeBtn.type = 'button';
+          removeBtn.className = 'remove-btn';
+          removeBtn.textContent = '×';
+          removeBtn.title = 'Remove patient';
+          removeBtn.addEventListener('click', async () => {
+            await removePatient(index);
+          });
+
+          rightSide.appendChild(removeBtn);
+          li.appendChild(patientInfo);
+          li.appendChild(rightSide);
+          queueList.appendChild(li);
+        });
+
+        patientCount.textContent = `${patients.length} Patient${patients.length === 1 ? '' : 's'}`;
+      }
+
+      async function loadPatients() {
+        try {
+          const patients = await fetchPatients();
+          renderQueue(patients);
+        } catch (error) {
+          queueList.innerHTML = '<li class="empty">Unable to load queue</li>';
+        }
+      }
+
+      async function addPatient(isPriority = false) {
+        const name = sanitiseName(patientNameInput.value);
+
+        if (!name) {
+          alert('Please enter patient name');
+          return;
+        }
+
+        const endpoint = isPriority ? '/api/patients/priority' : '/api/patients';
+
+        try {
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name })
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            alert(data.error || 'Unable to add patient');
+            return;
+          }
+
+          patientNameInput.value = '';
+          renderQueue(data.patients);
+          saveLocalQueue(data.patients);
+          return;
+        } catch (error) {
+          const patients = getLocalQueue();
+          const updated = [...patients];
+          if (isPriority) {
+            updated.unshift({ name, priority: true });
+          } else {
+            updated.push({ name, priority: false });
+          }
+          saveLocalQueue(updated);
+          patientNameInput.value = '';
+          renderQueue(updated);
+        }
+      }
+
+      async function removePatient(index) {
+        try {
+          const response = await fetch(`/api/patients/${index}`, {
+            method: 'DELETE'
+          });
+
+          const data = await response.json();
+          renderQueue(data.patients);
+          saveLocalQueue(data.patients);
+        } catch (error) {
+          const patients = getLocalQueue();
+          const updated = [...patients];
+          updated.splice(index, 1);
+          saveLocalQueue(updated);
+          renderQueue(updated);
+        }
+      }
+
+      async function clearQueue() {
+        try {
+          const response = await fetch('/api/patients', {
+            method: 'DELETE'
+          });
+
+          const data = await response.json();
+          renderQueue(data.patients);
+          saveLocalQueue(data.patients);
+        } catch (error) {
+          saveLocalQueue([]);
+          renderQueue([]);
+        }
+      }
+
+      async function nextPatient() {
+        const currentPatients = await fetchPatients();
+
+        if (currentPatients.length === 0) {
+          alert('No patients waiting in queue.');
+          return;
+        }
+
+        const removedPatient = currentPatients[0];
+
+        try {
+          const response = await fetch('/api/patients/0', {
+            method: 'DELETE'
+          });
+
+          const data = await response.json();
+          alert(`${removedPatient.name} is now being attended to.`);
+          renderQueue(data.patients);
+          saveLocalQueue(data.patients);
+          return;
+        } catch (error) {
+          const updated = currentPatients.slice(1);
+          alert(`${removedPatient.name} is now being attended to.`);
+          saveLocalQueue(updated);
+          renderQueue(updated);
+        }
+      }
+
+      document.getElementById('addPatientBtn').addEventListener('click', () => addPatient(false));
+      document.getElementById('priorityPatientBtn').addEventListener('click', () => addPatient(true));
+      document.getElementById('nextPatientBtn').addEventListener('click', nextPatient);
+      document.getElementById('clearQueueBtn').addEventListener('click', clearQueue);
+      patientNameInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          addPatient(false);
+        }
+      });
+
+      loadPatients();
+    </script>
+  </body>
+</html>

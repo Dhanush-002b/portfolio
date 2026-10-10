@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Bob",
+    "priority": true
+  },
+  {
+    "name": "Alice",
+    "priority": false
+  }
+]
