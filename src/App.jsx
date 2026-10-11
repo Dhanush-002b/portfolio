@@ -72,12 +72,12 @@ const projects = [
     number: '03',
     title: 'Daily Task Organizer',
     description:
-      'A simple task organizer concept to help users keep track of their everyday to-dos.',
+      'A polished daily task manager for creating and organizing to-dos with due dates, priorities, and categories. Search, sort, and filter tasks by status, then track progress with persistent browser storage and a light or dark theme.',
     technologies: ['HTML', 'CSS', 'JavaScript'],
     icon: Check,
     demo: true,
-    repoUrl: 'https://github.com/your-username/daily-task-organizer',
-    demoUrl: 'https://your-demo-url.example/daily-task-organizer',
+    repoUrl: 'https://github.com/Dhanush-002b',
+    demoUrl: '/daily-task-organizer/index.html',
   },
   {
     number: '04',

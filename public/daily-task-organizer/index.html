@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f6f7fb">
+  <meta name="description" content="A simple, focused task manager to organize your day.">
+  <title>Daymark — Task Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="Daymark home">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span>daymark<span class="brand-dot">.</span></span>
+      </a>
+
+      <button class="sidebar-add" id="sidebarAddTask" type="button">
+        <span class="plus-icon" aria-hidden="true">+</span>
+        <span>New task</span>
+        <span class="shortcut">N</span>
+      </button>
+
+      <p class="nav-label">WORKSPACE</p>
+      <nav class="main-nav" aria-label="Task views">
+        <button class="nav-item active" data-view="all" type="button">
+          <span class="nav-icon">▦</span><span>All tasks</span><span class="nav-count" id="allCount">0</span>
+        </button>
+        <button class="nav-item" data-view="today" type="button">
+          <span class="nav-icon">◷</span><span>Today</span><span class="nav-count" id="todayCount">0</span>
+        </button>
+        <button class="nav-item" data-view="upcoming" type="button">
+          <span class="nav-icon">▣</span><span>Upcoming</span>
+        </button>
+        <button class="nav-item" data-view="completed" type="button">
+          <span class="nav-icon">✓</span><span>Completed</span><span class="nav-count" id="completedCount">0</span>
+        </button>
+      </nav>
+
+      <p class="nav-label category-label">CATEGORIES</p>
+      <nav class="main-nav category-nav" aria-label="Task categories">
+        <button class="nav-item category-item" data-category="Work" type="button"><span class="category-dot work-dot"></span><span>Work</span></button>
+        <button class="nav-item category-item" data-category="Personal" type="button"><span class="category-dot personal-dot"></span><span>Personal</span></button>
+        <button class="nav-item category-item" data-category="Study" type="button"><span class="category-dot study-dot"></span><span>Study</span></button>
+        <button class="nav-item category-item" data-category="Other" type="button"><span class="category-dot other-dot"></span><span>Other</span></button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="focus-card">
+          <span class="focus-spark" aria-hidden="true">✦</span>
+          <p class="focus-title">A little progress<br>goes a long way.</p>
+          <p class="focus-caption">Keep showing up for yourself.</p>
+          <div class="focus-decoration" aria-hidden="true">✳</div>
+        </div>
+        <div class="profile">
+          <div class="avatar">D</div>
+          <div class="profile-copy"><strong>Your workspace</strong><span>Personal plan</span></div>
+          <span class="profile-menu" aria-hidden="true">···</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu" type="button" aria-label="Open navigation">☰</button>
+        <div class="breadcrumb"><span>Workspace</span><span class="breadcrumb-slash">/</span><strong id="breadcrumbView">All tasks</strong></div>
+        <div class="topbar-right">
+          <span class="today-date" id="topDate"></span>
+          <button class="icon-button" id="themeToggle" type="button" aria-label="Toggle color theme" title="Toggle color theme">☼</button>
+        </div>
+      </header>
+
+      <section class="content-wrap">
+        <div class="greeting-row">
+          <div>
+            <p class="eyebrow" id="greetingEyebrow">YOUR DAY, AT A GLANCE</p>
+            <h1 id="pageTitle">Good day<span class="title-period">.</span></h1>
+            <p class="page-subtitle" id="pageSubtitle">A clear mind starts with a clear plan.</p>
+          </div>
+          <button class="primary-button" id="addTaskButton" type="button"><span aria-hidden="true">+</span> Add a task</button>
+        </div>
+
+        <section class="stats-grid" aria-label="Task overview">
+          <article class="stat-card stat-total">
+            <div class="stat-top"><span class="stat-icon purple-icon">▦</span><span class="stat-trend">YOUR OVERVIEW</span></div>
+            <p class="stat-value" id="statTotal">0</p><p class="stat-label">Total tasks</p>
+            <div class="stat-progress"><span id="totalProgress"></span></div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span class="stat-icon orange-icon">◷</span><span class="stat-trend">ON YOUR LIST</span></div>
+            <p class="stat-value" id="statPending">0</p><p class="stat-label">Still to do</p>
+            <div class="stat-note"><span class="tiny-dot orange-dot"></span>One step at a time</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span class="stat-icon green-icon">✓</span><span class="stat-trend">LOOK AT YOU GO</span></div>
+            <p class="stat-value" id="statCompleted">0</p><p class="stat-label">Completed</p>
+            <div class="stat-note"><span class="tiny-dot green-dot"></span><span id="completionNote">Keep it up!</span></div>
+          </article>
+          <article class="stat-card stat-focus">
+            <div class="stat-top"><span class="stat-icon blue-icon">✧</span><span class="stat-trend">DAILY FOCUS</span></div>
+            <p class="stat-value"><span id="focusPercent">0</span><small>%</small></p><p class="stat-label">of your tasks done</p>
+            <div class="focus-bars" id="focusBars" aria-hidden="true"></div>
+          </article>
+        </section>
+
+        <section class="task-section">
+          <div class="section-heading">
+            <div><h2 id="listHeading">Your tasks</h2><p id="listCaption">Everything you want to get done.</p></div>
+            <div class="task-controls">
+              <label class="search-box"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Search tasks..." aria-label="Search tasks"><kbd>/</kbd></label>
+              <label class="sort-select-wrap"><span class="sr-only">Sort tasks</span>
+                <select id="sortSelect" aria-label="Sort tasks">
+                  <option value="date">Sort: Due date</option>
+                  <option value="priority">Sort: Priority</option>
+                  <option value="created">Sort: Recently added</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <div class="filter-row" role="group" aria-label="Filter tasks by status">
+            <button class="filter-chip active" data-filter="all" type="button">All <span id="filterAllCount">0</span></button>
+            <button class="filter-chip" data-filter="active" type="button">In progress <span id="filterActiveCount">0</span></button>
+            <button class="filter-chip" data-filter="completed" type="button">Completed <span id="filterCompletedCount">0</span></button>
+          </div>
+          <div class="task-list" id="taskList" aria-live="polite"></div>
+          <div class="list-footer"><span id="listFooterText">0 tasks</span><span class="footer-hint"><kbd>↵</kbd> mark complete <span class="footer-divider">·</span> <kbd>n</kbd> new task</span></div>
+        </section>
+        <footer class="app-footer"><span>Made for a more <span class="footer-heart">♥</span> organized you.</span><span>Take it one task at a time.</span></footer>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="taskModal" hidden>
+    <section class="task-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-heading"><div><p class="eyebrow">MAKE IT HAPPEN</p><h2 id="modalTitle">Add a task</h2></div><button class="modal-close" id="closeModal" type="button" aria-label="Close dialog">×</button></div>
+      <form id="taskForm">
+        <input type="hidden" id="taskId">
+        <label class="form-label" for="taskTitle">Task name</label>
+        <input class="form-input" id="taskTitle" name="title" type="text" placeholder="What needs to get done?" maxlength="120" required>
+        <label class="form-label" for="taskDescription">A few details <span class="optional-label">OPTIONAL</span></label>
+        <textarea class="form-input form-textarea" id="taskDescription" name="description" placeholder="Add a note or some context..." rows="3" maxlength="500"></textarea>
+        <div class="form-row">
+          <div><label class="form-label" for="taskDue">Due date</label><input class="form-input" id="taskDue" name="dueDate" type="date"></div>
+          <div><label class="form-label" for="taskPriority">Priority</label><select class="form-input" id="taskPriority" name="priority"><option value="medium">Medium</option><option value="high">High</option><option value="low">Low</option></select></div>
+        </div>
+        <label class="form-label" for="taskCategory">Category</label>
+        <select class="form-input" id="taskCategory" name="category"><option>Work</option><option>Personal</option><option>Study</option><option>Other</option></select>
+        <div class="form-actions"><button class="cancel-button" id="cancelModal" type="button">Cancel</button><button class="primary-button" id="saveTaskButton" type="submit">Add task <span aria-hidden="true">→</span></button></div>
+      </form>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
